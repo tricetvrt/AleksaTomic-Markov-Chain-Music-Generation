@@ -2,20 +2,20 @@
 
 ## Programming languages
 
-I plan to mainly use  Python for this project due to its extensive libraries and community support for machine learning and computer vision tasks. Additionally, I may use C++ or C for performance optimization if necessary.
+I plan to primarily use Java for this project, utilizing its object-oriented capabilities and efficiency in managing states and transitions in Markov chains. Java's support for structured data handling make it suitable for implementing chain algorithms and manipulating musical data.
 
 ## Algorithms and data structures to be implemented
 
-The primary algorithm I am implementing is the YOLO (You Only Look Once) object detection algorithm. I will also be using some basic image processing techniques for data preparation and augmentation. Common data structures such as arrays, lists, and dictionaries will be utilized for handling image data and annotations.
+The primary algorithm for this project will involve generating Markov chains of varying orders to model musical sequences. I will implement tries as the main data structure, allowing efficient storage and retrieval of note sequences and transitions between them. The trie will represent each sequence of notes as a path, where nodes correspond to individual notes, and branches indicate possible transitions. Additionally, I may use file handling techniques for managing abc notation files and storing generated sequences.
 
 ## What problem is solved?
 
-I am addressing the challenge of detecting elementary geometric shapes (such as circles, triangles, and rectangles) in real-world images to create artistic abstract representations. This project will contribute to the understanding of computer vision techniques and their application in creative fields.
+This project aims to explore algorithmic music composition through the use of Markov chains, focusing on the production of musical melodies in abc notation. This project will contribute to the understanding of stochastic processes in creative fields and explore the philosophical significance of AI in creative work.
 
 ## Taken inputs and how are they used
 
-The program will take images gathered from various sources. The images will be annotated so that the locations of the objects, or in this case, the geometrical shapes, will be indicated.
+The program will take sequences of notes represented in abc notation as input, learning from these to generate probable note sequences. These inputs will be processed by the Markov model to predict note transitions and produce new compositions with the desired level of complexity (degree of Markov chains).
 
 ## Desired time and space complexity
 
-While the specific time and space complexities may vary based on the implementation and the dataset, YOLO typically operates with a time complexity of O(1) due to its architecture, which is the complexity I aim for.  The space complexity mostly depends on the model's parameters and the input image size, but minimizing memory usage is another goal of mine. Achieving real-time detection is also the aim of this project.
+For efficient performance, I aim to achieve an optimal time complexity for sequence generation, ideally O(n) where n is the length of the generated sequence. Space complexity will depend on the number of states and transitions stored but will be minimized to ensure manageable memory usage, with tries being space efficient. Generating longer compositions in reasonable time frames is a goal.
