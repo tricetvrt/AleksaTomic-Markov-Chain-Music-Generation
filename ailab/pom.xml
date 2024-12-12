@@ -8,14 +8,18 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <build>
-    <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.0</version> <!-- You can update this version -->
+        <version>3.11.0</version>
         <configuration>
-          <release>17</release> <!-- Ensuring JDK 17 compatibility -->
+          <release>23</release> <!-- Ensuring JDK 23 compatibility -->
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
       </plugin>
     </plugins>
   </build>
@@ -24,8 +28,25 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.10.0</version> <!-- Latest version of JUnit 5 -->
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.openjfx</groupId>
+    	<artifactId>javafx-base</artifactId>
+    	<version>20</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.openjfx</groupId>
+    	<artifactId>javafx-graphics</artifactId>
+    	<version>20</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.openjfx</groupId>
+    	<artifactId>javafx-media</artifactId>
+    	<version>20</version>
+	</dependency>
+
+
   </dependencies>
 </project>

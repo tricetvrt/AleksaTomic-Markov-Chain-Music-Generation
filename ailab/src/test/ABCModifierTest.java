@@ -19,26 +19,26 @@ class ABCModifierTest {
     @Test
     void testAbcToIntValid() throws Exception {
         String abcNotation = "X: 1\nT: Example\nC: Composer\nG: Key\nM: 4/4\nL: 1/4\nK: C\nC D E F G A b";
-        int[] expected = {0, 2, 4, 5, 7, 9, 23};
+        int[] expected = {36, 38, 40, 41, 43, 45, 59};
         int[] result = abcModifier.abcToInt(abcNotation);
 
         assertArrayEquals(expected, result, "The ABC notation should be correctly converted to integers.");
     }
 
-    @Test
-    void testAbcToIntInvalid1() {
-        String abcNotation = "X Y Z"; // invalid notes
-
-        assertThrows(Exception.class, ()-> abcModifier.abcToInt(abcNotation), "an exception should be thrown for invalid notes.");
-    }
-    
-    @Test
-    void testAbcToIntInvalid2() {
-        String abcNotation = "A C D ^E F"; // Invalid note E^
-
-        assertThrows(Exception.class, ()->abcModifier.abcToInt(abcNotation), "an exception should be thrown for invalid notes.");
-    }
-
+//    @Test   
+//    void testAbcToIntInvalid1() {
+//        String abcNotation = "X Y Z"; // invalid notes
+//
+//        assertThrows(Exception.class, ()-> abcModifier.abcToInt(abcNotation), "an exception should be thrown for invalid notes.");
+//    }
+//    
+//    @Test
+//    void testAbcToIntInvalid2() {
+//        String abcNotation = "A C D ^E F"; // Invalid note E^
+//
+//        assertThrows(Exception.class, ()->abcModifier.abcToInt(abcNotation), "an exception should be thrown for invalid notes.");
+//    }
+// CHANGED TO SKIPPING INVALID NOTES
     @Test
     void testExtract() {
         String abcNotation = "X: 1\nT: Example\nC: Composer\nG: Key\nM: 4/4\nL: 1/4\nK: C\nC \"D\" D4 E ^F";
@@ -60,7 +60,7 @@ class ABCModifierTest {
     @Test
     void testNoteToIntValid1() throws Exception {
         String note = "C,,";
-        int expected = -24;
+        int expected = 12;
         int result = ABCModifier.noteToInt(note);
 
         assertEquals(expected, result, "The note should be correctly converted to integer.");
@@ -69,7 +69,7 @@ class ABCModifierTest {
     @Test
     void testNoteToIntValid2() throws Exception {
         String note = "_A,";
-        int expected = -4;
+        int expected = 32;
         int result = ABCModifier.noteToInt(note);
 
         assertEquals(expected, result, "The note should be correctly converted to integer.");
@@ -78,7 +78,7 @@ class ABCModifierTest {
     @Test
     void testNoteToIntValid3() throws Exception {
         String note = "^f''";
-        int expected = 42;
+        int expected = 78;
         int result = ABCModifier.noteToInt(note);
 
         assertEquals(expected, result, "The note should be correctly converted to integer.");
@@ -87,7 +87,7 @@ class ABCModifierTest {
     @Test
     void testNoteToIntValid4() throws Exception {
         String note = "z";
-        int expected = -1000;
+        int expected = 200;
         int result = ABCModifier.noteToInt(note);
 
         assertEquals(expected, result, "The note should be correctly converted to integer.");
@@ -96,7 +96,7 @@ class ABCModifierTest {
     @Test
     void testNoteToIntKindOfValid() throws Exception {
         String note = "z''";
-        int expected = -1000;
+        int expected = 200;
         int result = ABCModifier.noteToInt(note);
 
         assertEquals(expected, result, "The note should be correctly converted to integer.");
@@ -118,7 +118,7 @@ class ABCModifierTest {
 
     @Test
     void testIntToNoteValid1() throws Exception {
-        int value = 0;
+        int value = 36;
         String expected = "C";
         String result = abcModifier.intToNote(value);
 
@@ -127,7 +127,7 @@ class ABCModifierTest {
     
     @Test
     void testIntToNoteValid2() throws Exception {
-        int value = 37;
+        int value = 73;
         String expected1 = "^c''";
         String expected2 = "_d''";
         String result = abcModifier.intToNote(value);
@@ -137,7 +137,7 @@ class ABCModifierTest {
     
     @Test
     void testIntToNoteValid3() throws Exception {
-        int value = -1000;
+        int value = 200;
         String expected = "z";
         String result = abcModifier.intToNote(value);
 
@@ -147,7 +147,7 @@ class ABCModifierTest {
     
     @Test
     void testIntToNoteValid4() throws Exception {
-        int value = -17;
+        int value = 19;
         String expected = "G,,";
         String result = abcModifier.intToNote(value);
 

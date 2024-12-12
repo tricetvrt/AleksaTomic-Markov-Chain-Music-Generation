@@ -8,7 +8,7 @@ public class Node {
 	
 	public Node() {
 		super();
-		this.children= new Node[100];//pitaj dal mozda treba da se koristi lista umesto niza ili samo da vidim kolko note ce ubacim
+		this.children= new Node[201];//pitaj dal mozda treba da se koristi lista umesto niza ili samo da vidim kolko note ce ubacim
 		this.freq = 0;
 		this.isEnd = false;
 	

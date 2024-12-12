@@ -1,42 +1,95 @@
 package ailab;
 
+import java.util.Map;
+import java.util.Random;
 
 public class TestABC { //manual testing, you can ignoree :)
 
 	public static void main(String[] args) throws Exception {
-		String abcNotation = "X: 8\r\n"
-				+ "T: Ajde Jano\r\n"
-				+ "F: http://www.youtube.com/watch?v=gDqhElZLnU8 \r\n"
-				+ "F: http://www.youtube.com/watch?v=ZQn2l-DGCQ4\r\n"
-				+ "O: Serbia\r\n"
-				+ "M: 7/8\r\n"
-				+ "L: 1/8\r\n"
-				+ "Q: 1/4=120\r\n"
-				+ "K: Dm\r\n"
-				+ "\"F#m\"F2E D3/2E/FG|\"Dm\"F'2E F1/2E/D/2|\"Dm\"F2E DEFG    |\"Dm\"F3-F4   |\r\n"
-				
-				+ "";
-		//TuneParser parser = new TuneParser(); 
-        //Tune tune = parser.parse(abcNotation);
-        ABCModifier modifier = new ABCModifier();
-        System.out.println(modifier.intToNote(37));
-        RhythmGenerator r = new RhythmGenerator();
-        String abcNotation2 = "X: 554\r\n"
-        		+ "T: Zensko Kresteno\r\n"
-        		+ "O: Macedonia\r\n"
-        		+ "F: http://www.youtube.com/watch?v=cuFVnR0w8Dc\r\n"
-        		+ "M: 12/8\r\n"
-        		+ "L: 1/8\r\n"
-        		+ "Q: 1/4=200\r\n"
-        		+ "K: Cm\r\n"
-        		+ "%%MIDI beatstring fppmppmppmpp\r\n"
-        		+ "|:B,2z BAG FEF EDD |B,2z BAG FEF EDD   |\r\n"
-        		+ "  B,2z BAG FEF EDD |E2D EFD B,CB, C3   :|\r\n"
-        		+ "|:B,DD DGF EFE DDz |B,DD DGF EFE DDz   |\r\n"
-        		+ "  B,DD DGF EFE DDz |E2D EFD B,CB, C3   :|\r\n"
-        		+ "|:=EFz AGF E_DC DEz| =EFz AGF E_DC DEz |\\\r\n"
-        		+ "  =EFz AGF E_DC DEz|=EFz AGF E_DC- C2z :|";
+		String abcNotation = "\r\n"
+				+ "X:3\r\n"
+				+ "T:Cicek Dagi\r\n"
+				+ "O:Turkey\r\n"
+				+ "M:4/4\r\n"
+				+ "K:Bb\r\n"
+				+ "D2CED2z2|D2CED2z2|DE^FEGFED|D2CED2z2|DE^FEGFED|D2CED2z2||\r\n"
+				+ "C2B,DC2E2|D2CED2z>D|C2B,DC2E2|D2CED2zG,|\r\n"
+				+ "B,CDB,C2E2|D2CED2G,A,|B,CDB,C2E2|D2CED2z2|\r\n"
+				+ "|:D2G2G2G2|^FF/2A/2GFGFED|DE^FEGFED|DECED2z2:|\r\n"
+				+ "C2B,DC2E2|D2CED2z>D|C2B,DC2E2|D2CED2zG,|\r\n"
+				+ "B,CDB,C2E2|D2CED2G,A,|B,CDB,C2E2|D2CED2z2|\r\n"
+				+ "|:DEFEFEFE|F>EDFE2z2|DzE2DzE2|E>DCED2z2:|\r\n"
+				+ "|:D2G2G2G2|^FF/2A/2GFGFED|DE^FEGFED|DECED2z2:|\r\n"
+				+ "C2B,DC2E2|D2CED2z>D|C2B,DC2E2|D2CED2zG,|\r\n"
+				+ "B,CDB,C2E2|D2CED2G,A,|B,CDB,C2E2|D2CED2z2|\r\n"
+				+ "^FGA2A2G2|G2B2A2z2|^FGA2A2G2|G2B2A2z2|^FGA2A2G2|\r\n"
+				+ "c2BA/2B/2A2G2|^FGAGA2G2|^FF/2A/2GFE2D2|DE^FEGFED|DECED2z2|\r\n"
+				+ "C2B,DC2E2|D2CED2z>D|C2B,DC2E2|D2CED2zG,|\r\n"
+				+ "B,CDB,C2E2|D2CED2G,A,|B,CDB,C2E2|D2CED2z2|\r\n"
+				+ "|:d>cded2c2|B8|ABcBcdB2|A8:||\r\n"
+				+ "|B>AGBA2z2|G^FEGF2z2|E>DCED^FGA|\r\n"
+				+ "B>AGBA2z2|G^FEGF2z2|E>DCED2z2|\r\n"
+				+ "C2B,DC2E2|D2CED2z>D|C2B,DC2E2|D2CED2zG,|\r\n"
+				+ "B,CDB,C2E2|D2CED2G,A,|B,CDB,C2E2|D2CED2z2||";
 
+
+        
+
+         RhythmGenerator r = new RhythmGenerator();
+         ABCModifier abc = new ABCModifier();
+//         int[] x = r.abcToIntRhythm(abcNotation, "4/4");
+//         for(int i=0;i<x.length;i++) {
+//        	 System.out.println(x[i]);
+//         }
+         
+         int[][] data = r.abcToIntRhythmDatabase("C:\\Users\\PC\\OneDrive\\Documents\\faks\\ai lab projekat\\ailab\\abc_data.txt", "4/4");
+         int[][] data2 = abc.abcToIntDatabase("C:\\Users\\PC\\OneDrive\\Documents\\faks\\ai lab projekat\\ailab\\abc_data.txt");
+//// 
+//         for(int i=0;i<data2.length;i++) {
+//        	 for(int j=0;j<data2[i].length;j++) {
+//        		 System.out.print(data2[i][j] + " ");
+//        	 }
+//        	 System.out.println("NEXT");
+//         }
+        Node koren = new Node();
+        Node koren2 = new Node();
+ 		Trie drvo2 = new Trie(koren2,2);
+ 		Trie drvo3 = new Trie(koren,2);
+ 		drvo3.trainTrieDataset(data);
+ 		drvo2.trainTrieDataset(data2);
+ 		int[] x = drvo3.generateSequenceRhythm(30, RhythmGenerator.patterns_4_4 );
+ 		for(int i = 0 ; i<x.length; i++)
+ 			System.out.println(x[i]);
+ 	    int[] y = drvo2.generateSequence(new int[]{43, 45}, 30);
+ 		
+ 		Combine c = new Combine();
+
+ 		System.out.println(c.returnAbcNotation(y, x, RhythmGenerator.patterns_4_4));
+ 		
+ 	//	Random random = new Random();
+       // int randomIndex = random.nextInt(RhythmGenerator.patterns_4_4.size());
+        //System.out.println(randomIndex);
+// 		 drvo2.resetTrie();
+// 		 drvo2.trainTrieDataset(data);
+// 		 int[] melodija = drvo2.generateSequence(new int[]{36}, 120);
+// 		 for(int i = 0; i<melodija.length; i++) {
+// 			 System.out.print(a.intToNote(melodija[i]));
+// 			 if((i+1)%4 ==0)
+// 				 System.out.print(" | ");}
+ 		 
+ 		 
+ 		 
+ //       
+  //       int[] res = r.abcToIntRhythm(abcNotation2);
+//         for(int i=0;i<res.length;i++)
+//        	 System.out.println(res[i]);
+     //    String[] x = a.parse(a.extract(abcNotation2));
+//         for(int i=0;i<x.length;i++)
+//        	 System.out.println(x[i]);
+   //      System.out.println(c.returnAbcNotation(x, res, RhythmGenerator.patterns_4_4));
+
+         
+        
   //      System.out.println(modifier.getTimeSignature(abcNotation));
 //        Node start = new Node();
 //        Trie tr = new Trie(start);

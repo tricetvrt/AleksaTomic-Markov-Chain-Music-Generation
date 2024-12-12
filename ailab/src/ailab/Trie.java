@@ -1,5 +1,9 @@
 package ailab;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Random;
+
 public class Trie {
 
 	Node root;
@@ -148,6 +152,41 @@ public class Trie {
             System.arraycopy(melody, i, subsequence, 0, degree + 1);
             insert(subsequence);
         }
+	}
+	
+	public void trainTrieDataset(int[][] melodies) throws Exception {
+		for(int i = 0; i< melodies.length ; i++) {
+			trainTrie(melodies[i]);
+		}
+	}
+	
+	public int[] generateSequenceRhythm(int length, Map<Integer, Integer[]> dictionary) throws Exception {
+		int[] result = new int[length]; //length of the melody
+		int[] startingSeq = new int[degree];
+		Random random = new Random();
+		int randomIndex = 50;
+		while(root.children[randomIndex]==null ||  root.children[randomIndex].freq==0)//freq part maybe redundant but just in case, checking if the pattern even exists in the training data
+			randomIndex = random.nextInt(dictionary.size());
+        // get a random key - they are the same as indexes
+        startingSeq[0] = randomIndex;
+
+		int rhythmLength = dictionary.get(startingSeq[0]).length; // add the number of notes in the generated pattern
+		for(int i=1 ; i< degree ;i++) {
+			 startingSeq[i]= generateNext(startingSeq);// starting sequence
+			 rhythmLength += dictionary.get(startingSeq[i]).length; // adds the number of notes for every next generated pattern in the starting sequence
+		}
+		System.arraycopy(startingSeq, 0, result, 0, degree);
+		
+		int i= degree;
+		while(rhythmLength<=length) { // the loop will stop when teh number of notes in the rhythm exceedes the number f notes in the generated melody
+			int[] subseq= new int[degree];
+			System.arraycopy( result, i-degree, subseq, 0, degree);
+			result[i] = generateNext(subseq);
+			rhythmLength += dictionary.get(result[i]).length; // adds the number of notes for every next generated pattern
+			i++;
+		}
+		int[] result2 = Arrays.copyOfRange(result, 0, i);; // to trim all of the empty array spots, more memory efficiency maybe if done with an ArrayList
+		return result2;
 	}
 	
 	

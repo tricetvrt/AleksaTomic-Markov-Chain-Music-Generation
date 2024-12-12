@@ -24,12 +24,12 @@ public class RhythmGeneratorTest {
     public void testBarToLengthArrayValid() throws Exception {
         String[] barLengths = {"2", "2", "1/2", "1/4"};
         int noteLengthDenominator1 = 4;
-        int[] expected1 = {8, 8, 2, 1};
+        Integer[] expected1 = {8, 8, 2, 1};
         assertArrayEquals(expected1, rhythmGenerator.barToLengthArray(barLengths, noteLengthDenominator1));
 
         int noteLengthDenominator2 = 16;
         String[] barLengths2 = {"2", "4", "1", "1", "3"};
-        int[] expected2 = {2, 4, 1, 1, 3};
+        Integer[] expected2 = {2, 4, 1, 1, 3};
         assertArrayEquals(expected2, rhythmGenerator.barToLengthArray(barLengths2, noteLengthDenominator2));
 
     }
@@ -92,7 +92,7 @@ public class RhythmGeneratorTest {
         		+ "O: Macedonia\r\n"
         		+ "F: http://www.youtube.com/watch?v=cuFVnR0w8Dc\r\n"
         		+ "M: 12/8\r\n"
-        		+ "L: 1/8\r\n"
+        		+ "L: 1/16\r\n"
         		+ "Q: 1/4=200\r\n"
         		+ "K: Cm\r\n"
         		+ "%%MIDI beatstring fppmppmppmpp\r\n"
@@ -102,13 +102,70 @@ public class RhythmGeneratorTest {
         		+ "  B,DD DGF EFE DDz |E2D EFD B,CB, C3   :|\r\n"
         		+ "|:=EFz AGF E_DC DEz| =EFz AGF E_DC DEz |\\\r\n"
         		+ "  =EFz AGF E_DC DEz|=EFz AGF E_DC- C2z :|";
-        int expected2 = 8;
+        int expected2 = 16;
         assertEquals(expected2, rhythmGenerator.getNoteLength(abcNotation2));
 
         String abcNotationInvalid = "X:1\nC D E";
-        Exception exception = assertThrows(Exception.class, () -> {
-            rhythmGenerator.getNoteLength(abcNotationInvalid);
-        });
-        assertTrue(exception.getMessage().contains("no note length found"));
+        assertEquals(8, rhythmGenerator.getNoteLength(abcNotationInvalid));
     }
+    
+    
+    @Test
+    public void testSplitByBar() throws Exception {
+
+        String[] notes = {"2", "2", "1", "|", "4", "4", "|", "8"};
+        String[][] expected = {
+            {"2", "2", "1"},   
+            {"4", "4"},
+            {"8"}
+        };
+
+
+        String[][] result = RhythmGenerator.splitByBar(notes);
+
+        assertArrayEquals(expected, result);
+    }
+
+    @Test//FIXXX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public void testSplitByBarInvalid() throws Exception {
+        String[] noteLengths = {"100", "2", "1", "|", "Z"};
+
+        assertThrows(Exception.class, () -> {
+            RhythmGenerator.splitByBar(noteLengths);
+        });
+    }
+    
+    
+    @Test
+    public void testPatternReader() {
+        Integer[][] bars = {
+            {4, 4, 4, 4},
+            {8, 8},
+            {2, 4, 2, 8}
+        };
+
+        int[] expected = {0, 1, 2};
+        int[] result = RhythmGenerator.patternReader(bars, RhythmGenerator.patterns_4_4);
+
+        assertArrayEquals(expected, result);
+    }
+    
+    public void testPatternReader2() {
+        Integer[][] bars = {
+            {4, 4, 4, 4},
+            {8, 8},
+            {1, 1, 2, 2},
+            {2, 4, 2, 8},
+            {2}
+        };
+
+        int[] expected = {0, 1, 2};
+        int[] result = RhythmGenerator.patternReader(bars, RhythmGenerator.patterns_4_4);
+
+        assertArrayEquals(expected, result);
+    }
+
+ 
+    
+    
 }
