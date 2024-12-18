@@ -3,9 +3,15 @@ package test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ailab.ABCModifier;
+import main.ailab.ABCModifier;
+import main.ailab.RhythmGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
 
 class ABCModifierTest {
 
@@ -16,6 +22,38 @@ class ABCModifierTest {
         abcModifier = new ABCModifier();
     }
 
+    @Test
+    public void testAbcToIntDatabaseValid1() throws Exception {
+        // creating a proper temporary file to use in testing with 3 abc notations
+        String sampleData = 
+            "X: 1\nT: Sample\nM: 4/4\nK: C\n|: C2 C2 C2 C2 :|\n$$$" +
+            "X: 2\nT: Another Sample\nM: 3/4\nK: C\n|: D2 D2 D2 :| C4 C4 :| \n$$$" +
+            "X: 3\nT: Third Sample\nM: 4/4\nK: C\n|: E2 E2 E2 E2 :| C2 C2 C2 C2 |";
+        Path tempFile = Files.createTempFile("abc_test", ".abc");
+        Files.writeString(tempFile, sampleData);
+
+        int[][] result = abcModifier.abcToIntDatabase(tempFile.toString());
+
+        // the output should contain all of the notes' expected int values
+        int[][] expected = {
+            {36,36,36,36}, 
+            {38,38,38,36,36},
+            {40,40,40,40,36,36,36,36}
+        };
+        assertTrue(Arrays.deepEquals(result, expected));
+        Files.delete(tempFile);
+    }
+
+    @Test
+    public void testAbcToIntDatabaseInvalid() {
+
+        // ensuring the exception is thrown for the invalid file path
+        Exception exception = assertThrows(IOException.class, () -> { abcModifier.abcToIntDatabase("invalid/horrible/awful/path/file.abc"); });
+        assertTrue(exception.getMessage().contains("could not read file"));
+    }
+    
+    
+    
     @Test
     void testAbcToIntValid() throws Exception {
         String abcNotation = "X: 1\nT: Example\nC: Composer\nG: Key\nM: 4/4\nL: 1/4\nK: C\nC D E F G A b";

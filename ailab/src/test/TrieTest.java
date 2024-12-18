@@ -1,11 +1,18 @@
 package test;
 
 import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import ailab.Node;
-import ailab.Trie;
+
+import main.ailab.ABCModifier;
+import main.ailab.Node;
+import main.ailab.RhythmGenerator;
+import main.ailab.Trie;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 class TrieTest {
     
@@ -128,7 +135,7 @@ class TrieTest {
 
     @Test
     void testGenerateSequence1() throws Exception {
-        // Train the trie and generate a sequence
+        // train the trie and generate a sequence
         int[] melody = {1, 2, 3, 2, 3, 4};
         trie.trainTrie(melody);
         
@@ -136,6 +143,16 @@ class TrieTest {
         int length = 7;
         int[] generatedSequence = trie.generateSequence(startingSeq, length);
         
+        
+        for( int i = 0 ; i < generatedSequence.length - 2 ; i++) {
+        	//now I will check if the subsequences in the generated sequence exist in the trie
+        	// in order to avoid errors, I have implemented repeating th elast note if there are no last notes available
+        	// to skip these cases, since they would assert false, i added the following if statement
+        	// while it is not perfect, this was the only way to test this without removing the note repeating functionality
+        	if(generatedSequence[i+1] != generatedSequence[i+2]) {
+        		assertTrue(trie.search(Arrays.copyOfRange(generatedSequence, i, i+3)));
+        	}
+        }
         assertNotNull(generatedSequence, "generated sequence should not be null");
         assertEquals(length, generatedSequence.length, "generated sequence should have the correct length");
         // if the generated sequence starts well
@@ -144,7 +161,7 @@ class TrieTest {
 
     @Test
     void testGenerateSequence2() throws Exception {
-        // Train the trie and generate a sequence
+        // train the trie and generate a sequence
         int[] melody = {1, 2, 3, 4, 5, 6};
         trie.trainTrie(melody);
         
@@ -157,6 +174,55 @@ class TrieTest {
         //the generated sequence in this case should be the same as the "melody" array because of no patterns
         assertArrayEquals(generatedSequence, melody, "the generated sequence in this test should match the prompted one");
     }
+    
+    @Test
+    void testGenerateRhythmSequence1() throws Exception {
+        // Train the trie and generate a sequence
+        int[] rhythm = {1, 2, 3, 2, 0, 1, 0};
+        trie.trainTrie(rhythm);
+        Map<Integer, Integer[]> dictionary = RhythmGenerator.patterns_4_4;
+        int length = 6;
+        int[] generatedSequence = trie.generateSequenceRhythm(length, dictionary);
+        int durationsLength = 0;
+        for(int i = 0; i< generatedSequence.length ; i++) {
+        	assertTrue(dictionary.containsKey(generatedSequence[i]), "generated sequence contains invalid key: " + generatedSequence[i]);
+        	durationsLength += dictionary.get(generatedSequence[i]).length; }
+        	
+        assertNotNull(generatedSequence, "generated sequence should not be null");
+        assertTrue(durationsLength >= length, "generated sequence's durations all together should have the correct length");
+        trie.resetTrie();
+        int[] rhythm2 = {1, 2, 2}; 
+        // helped me find the need to control the length of the melodies used for training,
+        // and fix the starting sequence generation for this method
+        int[] expected = {1, 2};
+        trie.trainTrie(rhythm2);
+        generatedSequence = trie.generateSequenceRhythm(length, dictionary);
+        // the generated sequence should now be the same as expected, as that would be the only possible one
+        assertArrayEquals(generatedSequence, expected, "the generated sequence in this test should match the prompted one");
+    }
+    
+    @Test
+    void testGenerateRhythmSequence2() throws Exception {
+        // Train the trie and generate a sequence
+        int[] rhythm = {1, 2, 3, 2, 0, 1, 0};
+        trie.trainTrie(rhythm);
+        Map<Integer, Integer[]> dictionary = RhythmGenerator.patterns_7_8;
+        int length = 30;
+        int[] generatedSequence = trie.generateSequenceRhythm(length, dictionary);
+        for(int i = 0; i< generatedSequence.length - 2 ; i++) {
+        	assertTrue(dictionary.containsKey(generatedSequence[i]), "generated sequence contains invalid key: " + generatedSequence[i]);
+        	//now I will check if the subsequences in the generated sequence exist in the trie
+        	// in order to avoid errors, I have implemented repeating th elast note if there are no last notes available
+        	// to skip these cases, since they would assert false, i added the following if statement
+        	// while it is not perfect, this was the only way to test this without removing the note repeating functionality
+        	if(generatedSequence[i+1] != generatedSequence[i+2]) {
+        		assertTrue(trie.search(Arrays.copyOfRange(generatedSequence, i, i+3)));
+        	}
+        }
+        	
+        assertNotNull(generatedSequence, "generated sequence should not be null");
+        
+      }
     
     @Test
     void testResetTrie() throws Exception {
@@ -175,5 +241,11 @@ class TrieTest {
         assertTrue(trie.search(sequence), "sequence should be found (train)");
         int[] nonExistentSequence = {4, 5, 6};
         assertFalse(trie.search(nonExistentSequence), "sequence should not be found (train)");
+    }
+    
+    @Test
+    void testTrainTrieInvalid() throws Exception {
+        int[] melody = {1, 2};
+        assertThrows(Exception.class, () -> trie.trainTrie(melody), "an exception should be thrown.");
     }
 }

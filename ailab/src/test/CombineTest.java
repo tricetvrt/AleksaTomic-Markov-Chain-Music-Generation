@@ -2,13 +2,14 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-import java.util.HashMap;
+
+
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import ailab.Combine;
-import ailab.RhythmGenerator;
+import main.ailab.Combine;
+import main.ailab.RhythmGenerator;
 
 public class CombineTest {
 

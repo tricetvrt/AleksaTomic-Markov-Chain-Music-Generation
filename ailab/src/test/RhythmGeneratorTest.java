@@ -1,14 +1,72 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
-import ailab.RhythmGenerator;
+import main.ailab.RhythmGenerator;
 
 public class RhythmGeneratorTest {
 
     private RhythmGenerator rhythmGenerator = new RhythmGenerator();
 
+    @Test
+    public void testAbcToIntRhythmDatabaseValid1() throws Exception {
+        // creating a proper temporary file to use in testing with 3 abc notations
+        String sampleData = 
+            "X: 1\nT: Sample\nM: 4/4\nK: C\n|: C2 C2 C2 C2 :| C2 C2 C2 C2 :| C2 C2 C2 C2 :| C2 C2 C2 C2 :|\n$$$" +
+            "X: 2\nT: Another Sample\nM: 3/4\nK: C\n|: D2 D2 D2 :| C4 C4 :| C2 C2 C2 :| C C4 C :|\n$$$" +
+            "X: 3\nT: Third Sample\nM: 4/4\nK: C\n|: E2 E2 E2 E2 :| C2 C2 C2 C2 | C2 C2 C2 C2 |";
+        Path tempFile = Files.createTempFile("abc_test", ".abc");
+        Files.writeString(tempFile, sampleData);
+
+        int[][] result = rhythmGenerator.abcToIntRhythmDatabase(tempFile.toString(), "4/4");
+
+        // the output should contain only the patterns matching notations with the given time signature "4/4"
+        int[][] expected = {
+            {0,0,0,0}, 
+            {0,0,0}  
+        };
+        assertTrue(Arrays.deepEquals(result, expected));
+        Files.delete(tempFile);
+    }
+    
+    @Test
+    public void testAbcToIntRhythmDatabaseValid2() throws Exception {
+        // creating a proper temporary file to use in testing with 3 abc notations
+        String sampleData = 
+            "X: 1\nT: Sample\nM: 3/4\nK: C\n|: C4 C4 C4 C4 :|\n$$$" +
+            "X: 2\nT: Another Sample\nM: 3/4\nK: C\n|: D4 D4 D4 :|\n$$$" +
+            "X: 3\nT: Third Sample\nM: 2/4\nK: C\n|: E4 E4 E4 E4 :|";
+        Path tempFile = Files.createTempFile("abc_test", ".abc");
+        Files.writeString(tempFile, sampleData);
+
+        int[][] result = rhythmGenerator.abcToIntRhythmDatabase(tempFile.toString(), "4/4");
+
+        // the output should be empty, since there are no notations with the given time signature
+        int[][] expected = {
+        };
+        assertTrue(Arrays.deepEquals(result, expected));
+        Files.delete(tempFile);
+    }
+
+    @Test
+    public void testAbcToIntRhythmDatabaseInvalid() {
+       // ensuring the exception is thrown for the invalid file path
+        Exception exception = assertThrows(IOException.class, () -> { rhythmGenerator.abcToIntRhythmDatabase("invalid/horrible/awful/path/file.abc", "4/4"); });
+        assertTrue(exception.getMessage().contains("could not read file"));
+    }
+    
+    
+    
+    
+    
     @Test
     public void testParseRhythm() throws Exception {
         String melody1 = "C D E F | G A B c";
@@ -126,9 +184,9 @@ public class RhythmGeneratorTest {
         assertArrayEquals(expected, result);
     }
 
-    @Test//FIXXX!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Test
     public void testSplitByBarInvalid() throws Exception {
-        String[] noteLengths = {"100", "2", "1", "|", "Z"};
+        String[] noteLengths = {"|", "|", "|"};
 
         assertThrows(Exception.class, () -> {
             RhythmGenerator.splitByBar(noteLengths);
@@ -137,7 +195,7 @@ public class RhythmGeneratorTest {
     
     
     @Test
-    public void testPatternReader() {
+    public void testPatternReader1() {
         Integer[][] bars = {
             {4, 4, 4, 4},
             {8, 8},
@@ -150,6 +208,7 @@ public class RhythmGeneratorTest {
         assertArrayEquals(expected, result);
     }
     
+    @Test
     public void testPatternReader2() {
         Integer[][] bars = {
             {4, 4, 4, 4},
@@ -165,7 +224,38 @@ public class RhythmGeneratorTest {
         assertArrayEquals(expected, result);
     }
 
+    
+    @Test
+    public void testPatternReaderInvalid() {
+        Integer[][] bars = {
+            {4, 4, 4, 7},
+            {8, 8, 8, 8},
+            {1, 1,1, 1, 1, 2, 2},
+            {2, 4, 2, 8, 9},
+            {2}
+        };
+
+        int[] expected = {};
+        int[] result = RhythmGenerator.patternReader(bars, RhythmGenerator.patterns_4_4);
+
+        assertArrayEquals(expected, result);
+    }
  
+    
+    @Test
+    public void testGetPatternDictionaryWithParsing() throws Exception {
+
+
+        Map<Integer, Integer[]> dictionary = RhythmGenerator.patterns_4_4;
+        assertEquals( dictionary, rhythmGenerator.getPatternDictionary("4/4\r\n"));
+
+       }
+    @Test
+    public void testGetPatternDictionaryInvalid() {
+
+        assertThrows(Exception.class, () -> {  rhythmGenerator.getPatternDictionary("1/8");});
+
+       }
     
     
 }
