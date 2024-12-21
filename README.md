@@ -1,4 +1,4 @@
-# Music Generating throught the implementation of Markov chains
+# Music Generating through the implementation of Markov chains
 
 This is a project done for the Algorithms and AI Lab (BSCS2012) course of the University of Helsinki.
 
