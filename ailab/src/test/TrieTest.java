@@ -2,9 +2,9 @@ package test;
 
 import org.junit.jupiter.api.BeforeEach;
 
+
 import org.junit.jupiter.api.Test;
 
-import main.ailab.ABCModifier;
 import main.ailab.Node;
 import main.ailab.RhythmGenerator;
 import main.ailab.Trie;
@@ -20,7 +20,8 @@ class TrieTest {
 
     @BeforeEach
     void setUp() {
-        trie = new Trie(new Node(), 2);}
+    	Node root = new Node();
+        trie = new Trie(root, 2);}
 
     @Test
     void testInsertSearch() throws Exception {
@@ -246,6 +247,7 @@ class TrieTest {
     @Test
     void testTrainTrieInvalid() throws Exception {
         int[] melody = {1, 2};
-        assertThrows(Exception.class, () -> trie.trainTrie(melody), "an exception should be thrown.");
+        trie.trainTrie(melody);
+        assertTrue(trie.getRoot().getChildren()[1] == null); // skipping all invalid melodies for training
     }
 }

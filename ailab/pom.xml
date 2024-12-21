@@ -58,6 +58,12 @@
       <version>20</version> <!-- Use consistent version -->
     </dependency>
 
+	<dependency>
+    	<groupId>de.sciss</groupId>
+    	<artifactId>abc4j</artifactId>
+    	<version>0.6.0</version>
+	</dependency>
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>

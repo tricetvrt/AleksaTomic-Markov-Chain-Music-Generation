@@ -1,10 +1,10 @@
 package main.ailab;
 
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +77,7 @@ public class RhythmGenerator {
 		for(int i=0; i<notations.length; i++) {
 			if(getTimeSignature(notations[i]).equals(timeSignature)){// filtering the dataset based on the given time signature
 				result.add(abcToIntRhythm(notations[i], timeSignature));
-				System.out.println(notations[i]);}// adding the pattern sequences to the list
+				}// adding the pattern sequences to the list
 		}
 		int[][] result2 = new int[result.size()][]; // converting to int matrix so that training is possible
 		for( int i = 0 ; i< result2.length ; i++) {

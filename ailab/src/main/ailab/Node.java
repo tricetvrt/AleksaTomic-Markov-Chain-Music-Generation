@@ -8,10 +8,20 @@ public class Node {
 	
 	public Node() {
 		super();
-		this.children= new Node[201];//pitaj dal mozda treba da se koristi lista umesto niza ili samo da vidim kolko note ce ubacim
+		this.children= new Node[201]; // children[200] is reserved for breaks (z)
 		this.freq = 0;
 		this.isEnd = false;
 	
+	}
+
+
+	public Node[] getChildren() {
+		return children;
+	}
+
+
+	public void setChildren(Node[] children) {
+		this.children = children;
 	}
 
 

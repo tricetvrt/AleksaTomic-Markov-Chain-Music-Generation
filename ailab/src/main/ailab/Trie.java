@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Trie {
 
-	Node root;
+	 Node root;
 	int degree;
 
 	public Trie(Node root) {
@@ -39,6 +39,16 @@ public class Trie {
 		current.isEnd = true;
 	}
 	
+	public Node getRoot() {
+		return root;
+	}
+
+
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+
+
 	public boolean search(int[] sequence) throws Exception {
 		if(sequence==null || sequence.length!=degree+1) {
 			throw new Exception("inappropriate sequence(search)");
@@ -146,9 +156,11 @@ public class Trie {
 	    this.root = new Node(); // in case I need to work with multiple training datasets
 	}
 	
-	public void trainTrie(int[] melody) throws Exception {//myb better that the argument is a database
+	public void trainTrie(int[] melody) throws Exception{//myb better that the argument is a database
 		if(melody.length <= degree)
-			throw new Exception("the length of the melody used for training should be at least bigger than the degree");
+			return; //"the length of the melody used for training should be at least bigger than the degree" + melody.length);
+		// not using an Exception since it is possible that the notation used has no prewritten rhythm patterns. Then the generation would be terminated.
+		// by not using an Exception, the generation is uninterrupted by this edge case
 		for (int i = 0; i <= melody.length - (degree + 1); i++) {
             int[] subsequence = new int[degree + 1];
             System.arraycopy(melody, i, subsequence, 0, degree + 1);

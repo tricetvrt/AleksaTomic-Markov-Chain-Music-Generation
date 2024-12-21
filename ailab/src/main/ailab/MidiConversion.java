@@ -8,7 +8,14 @@ import javax.sound.midi.*;
 public class MidiConversion {
 	
 	
-	
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
+	// NOT IN USE!!!!!!!!!!!!!!!NOT IN USE!!!!
 	
 	public Sequence convertToMidiSequence(int[] notes, int[] rhythm,  Map<Integer, Integer[]> dictionary) throws Exception {
         // create a new MIDI sequence with a single track
@@ -32,7 +39,7 @@ public class MidiConversion {
         
         // add a tempo meta message (e.g., 120 BPM)
         MetaMessage tempoMessage = new MetaMessage();
-        int tempo = 500000; // Microseconds per quarter note (120 BPM)
+        int tempo = 500000; // 120 bpm
         tempoMessage.setMessage(0x51, new byte[] {
             (byte)(tempo >> 16), 
             (byte)(tempo >> 8), 

@@ -1,6 +1,7 @@
 package main.gui;
 
 import java.io.File;
+
 import java.util.HashMap;
 import java.util.Map;
 import abc.midi.BasicMidiConverter;
@@ -81,8 +82,8 @@ public class MelodyGeneratorApp extends Application {
             	Trie rhythmTrie = new Trie(rhythmRoot, degree);
             	
             	// transforming the training data into arrays of int arrays, which are to be added to the tries
-            	int[][] data = rhythm.abcToIntRhythmDatabase("C:\\Users\\PC\\OneDrive\\Documents\\faks\\ai lab projekat\\ailab\\abc_data.txt", "4/4");
-                int[][] data2 = modifier.abcToIntDatabase("C:\\Users\\PC\\OneDrive\\Documents\\faks\\ai lab projekat\\ailab\\abc_data.txt");
+            	int[][] data = rhythm.abcToIntRhythmDatabase("abc_data.txt", "4/4");
+                int[][] data2 = modifier.abcToIntDatabase("abc_data.txt");
                 rhythmTrie.trainTrieDataset(data);
                 melodyTrie.trainTrieDataset(data2);
                 
@@ -146,7 +147,12 @@ public class MelodyGeneratorApp extends Application {
         
         File soundbankFile = new File("C:\\Users\\PC\\Downloads\\super_mario.sf2");// load the custom soundbank
         Soundbank soundbank = MidiSystem.getSoundbank(soundbankFile);
-
+        if (synthesizer.isSoundbankSupported(soundbank)) {
+            synthesizer.loadAllInstruments(soundbank);
+            System.out.println("soundbank loaded successfully");
+        } else {
+            System.err.println("soundbank not supported");
+        }
         // link sequencer to synthesizer
         Transmitter transmitter = sequencer.getTransmitter();
         Receiver receiver = synthesizer.getReceiver();
