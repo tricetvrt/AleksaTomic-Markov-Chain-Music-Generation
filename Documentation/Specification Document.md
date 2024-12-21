@@ -19,3 +19,9 @@ The program will take sequences of notes represented in abc notation as input, l
 ## Desired time and space complexity
 
 For efficient performance, I aim to achieve an optimal time complexity for sequence generation, ideally O(n) where n is the length of the generated sequence. Space complexity will depend on the number of states and transitions stored but will be minimized to ensure manageable memory usage, with tries being space efficient. Generating longer compositions in reasonable time frames is a goal.
+
+---
+<p align="right">
+Bachelor of Science in Computer Science (CS) <br>
+The documentation for this project is written in English.
+</p>
