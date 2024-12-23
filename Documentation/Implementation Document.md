@@ -58,3 +58,10 @@ ChatGPT was used for assistance in finding code errors, and mostly for help with
 
 
 ## References:
+
+   - [Learn ABC notation](https://abcnotation.com/learn)
+   - [Markov Chains Explanation](https://builtin.com/machine-learning/markov-chain)
+   - [Tries Explained](https://www.geeksforgeeks.org/introduction-to-trie-data-structure-and-algorithm-tutorials/)
+   - [Understanding Time Signatures](https://www.skoove.com/blog/time-signatures-explained/)
+   - [Henrick Norbeck's ABC Tunes](https://www.norbeck.nu/abc/index2.asp?cat=m)
+     
