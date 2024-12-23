@@ -13,7 +13,7 @@ public class ABCModifier {
 
 	private static final Map<String, Integer> base_notes = new HashMap<>();
 
-    static {
+    static { // base notes and their values used for converting the abc notation to integer arrays
     	base_notes.put("z", 200);
     	base_notes.put("C", 36);
     	base_notes.put("^C", 37);
@@ -71,6 +71,8 @@ public class ABCModifier {
         return componentsArray;
 	}
 	
+	
+	// a method which only extracts the melody part of the ABC notation code
 	public String extract(String abcNotation) {
 		abcNotation = abcNotation.replaceAll("\r", "");// deals with carriage return characters
         String[] lines = abcNotation.split("\n");
@@ -86,6 +88,9 @@ public class ABCModifier {
         return melody.toString().trim();//removing unecessary whitespace
     }
 
+	
+	// a method used for parsing the extracted melody from ABC notation
+	// it keeps only the notes and modifiers, and puts them into a String array
     public String[] parse(String melody) {
         String cleanmelody= melody.replace("|", " "); //add C2 is C 
         cleanmelody = cleanmelody.replaceAll("\"[A-Ga-g](m|#)?(m)?\"", "");
@@ -99,14 +104,17 @@ public class ABCModifier {
     }
     	
     
+    
+    // a method for converting a note String into an corresponding value
     public static int noteToInt(String note) throws Exception { 
         if (note==null || note.isEmpty()) {
             throw new Exception("invalid note input");
         }
         if(note.contains("z")) // in the same time fixing the error if somehow the note is z with modifiers (z')
         	return 200;
-        String baseNote = note.charAt(0) + "";
+        String baseNote = note.charAt(0) + ""; // adding the first character of the note to the baseNote String
         int flatsharp = 0;
+        // if the first character is a symbol representing a flat note or a sharp note, we should add the second character to the baseNote
         if (baseNote.equals("^") || baseNote.equals("_")) {
             baseNote += Character.toUpperCase(note.charAt(1));
             flatsharp=1;
@@ -117,8 +125,9 @@ public class ABCModifier {
         if (!base_notes.containsKey(baseNote)) {
             throw new Exception("there is not a base note : " + baseNote);
         }
-        int value = base_notes.get(baseNote);
+        int value = base_notes.get(baseNote); // getting the value of the base note
 
+        // if the note is written in lowercase, add 12 to the integer representing a higher octave
         if(flatsharp == 0 && Character.isLowerCase(note.charAt(0)))
         	value+=12;
         if(flatsharp == 1 && Character.isLowerCase(note.charAt(1)))
@@ -127,42 +136,47 @@ public class ABCModifier {
         for (int i = 1; i < note.length(); i++) {// for , or ' increasing and decreasing octaves
             char mod=note.charAt(i);
             if (mod== '\'') {
-                value+= 12; 
+                value+= 12; // adding 12 for every modifier ' representing a higher octave
             } else if (mod==',') {
-                value-= 12;
+                value-= 12; // reducing 12 for every modifier ,
             }
         }
 
         return value;
     }
     
+    
+    // a function for converting an integer value to a String of the according note as if its written in ABC notation
     public String intToNote(int value) throws Exception {
     	String note = "";
-    	String help = "";
+    	String help = ""; // used for saving the modifiers
 
-    	if(value < 0 || value > 200)// fix maybe -1000 if the value for z is changed
+    	if(value < 0 || value > 200)
     		throw new Exception ("invalid integer value to convert to a note");
     	
-    	while(!base_notes.containsValue(value)) {
-    		if(value<36) {
+    	while(!base_notes.containsValue(value)) { // modifying the int value until it is a value of a base note
+    		if(value<36) { 
+    			// if the value is smaller then 36, the note is of a lower octave than the base one
     			value+= 12;
-    			help+= ",";
+    			help+= ","; // the modifier used for lowering an octave
     		}
     		else {
+    			// if its higher than the base notes, we should lower the octave to the base one
     			value-= 12;
-    			help += "'";
+    			help += "'"; // the modifier used for increasing by an octave
     		}
     	}
     	
     	 for (Map.Entry<String, Integer> entry : base_notes.entrySet()) {
              if (value == entry.getValue()) {
-                 note = entry.getKey();
+                 note = entry.getKey(); // getting the base note String
              }}
     	 if(note.equals(""))
     		 throw new Exception("couldnt get the base note from a value");
 
 
-         if(!(help.equals("")) && help.charAt(0)=='\'') {
+    	// if the first character of the help String is ', we should remove it and instead write the note as a lower case (ABC notation rules)
+         if(!(help.equals("")) && help.charAt(0)=='\'') { 
         	  if(note.length()==1)
         		  note= Character.toLowerCase(note.charAt(0))+"";
         	  

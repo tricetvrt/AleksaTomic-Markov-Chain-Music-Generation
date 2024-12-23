@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RhythmGenerator {
+	// creating a HashMap for collections of patterns which occur often for a particular time signature
 	public static final Map<Integer, Integer[]> patterns_4_4 = new HashMap<>();
 	private static final Map<Integer, Integer[]> patterns_3_4 = new HashMap<>();
 	private static final Map<Integer, Integer[]> patterns_2_4 = new HashMap<>();
@@ -17,6 +18,8 @@ public class RhythmGenerator {
 	private static final Map<Integer, Integer[]> patterns_6_8 = new HashMap<>();
 	private static final Map<Integer, Integer[]> patterns_12_8 = new HashMap<>();//maybe no need
 
+	
+	// so far, I have only implemented patterns for the 4/4 and 7/8 time signatures
     static {
     	patterns_4_4.put(0, new Integer[]{4,4,4,4});
     	patterns_4_4.put(1, new Integer[]{8,8});
@@ -87,7 +90,7 @@ public class RhythmGenerator {
 	}
     
     
-    
+    // a function that converts an ABC notation code into an array of int keys of known patterns detected
     public int[] abcToIntRhythm(String abcNotation, String timeSignature) throws Exception {
     	    String melody = extract(abcNotation);
     	    if (melody.isEmpty()) {
@@ -117,6 +120,7 @@ public class RhythmGenerator {
         
 	}
     
+    // a function for extracting the melody from the ABC notation
     public String extract(String abcNotation) {
         String[] lines = abcNotation.split("\n");
         StringBuilder melody= new StringBuilder();
@@ -132,6 +136,8 @@ public class RhythmGenerator {
     }
     
     
+    // a function used for parsing an extracted melody
+    // it returns a String array of note lengths, and transforms every possible version of a half note to 1/2 
     public String[] parseRhythm(String melody) {
         String cleanmelody= melody.replace("|", " | "); 
         cleanmelody = cleanmelody.replaceAll("\"[A-Ga-g](m|#)?(m)?\"", "");
@@ -150,17 +156,20 @@ public class RhythmGenerator {
         return notes;
     }
     
+    
+    // a function that converts the parsed String array to and Integer array of lengths
+    // the base note length of the generated melody will always be 1/16 since its easier for generation
+    // the function returns the number of how many times is the note longer than 1/16
     public Integer[] barToLengthArray(String[] barLengths, int noteLengthDenominator) throws Exception {
-    	//ill just need to separate the lengths to barsbased on | and then according to time signature add pattern to hashmap f its not there and add value to int array
     	Integer[] lengths = new Integer[barLengths.length];
     	double helper;
-    	int mod = 16/ noteLengthDenominator;
+    	int mod = 16/ noteLengthDenominator; // by how much should we multiply the lenghts
     	for(int i = 0; i< barLengths.length ; i++) {
     		if(barLengths[i].contains("/")) {
     			String[] lengthParts = barLengths[i].split("/");
     			try {
     				double numerator = lengthParts[0].isEmpty() ? 1 : Double.parseDouble(lengthParts[0]); // if the numerator is missing, it is 1
-                    helper =  numerator/ Double.parseDouble(lengthParts[1]);
+                    helper =  numerator/ Double.parseDouble(lengthParts[1]); // handing half, quarter etc. notes
                     if(mod>1)
                     	lengths[i] = (int) (helper*mod);
                     else
@@ -180,6 +189,7 @@ public class RhythmGenerator {
 		return lengths;}
     
     
+    // a function for getting the time signature from the ABC notation code
     public String getTimeSignature(String abcNotation) throws Exception {
     	abcNotation = abcNotation.replaceAll("\r","");
         String[] lines = abcNotation.split("\n");
@@ -191,7 +201,8 @@ public class RhythmGenerator {
         throw new Exception("no time signature found for: " + lines[0]);
     }
     
-    
+    // a function for getting the base note lengths from the ABC notation code
+    // if the base note length is note explicitly stated, it is 1/8
     public int getNoteLength(String abcNotation) throws Exception {
         String[] lines = abcNotation.split("\n");
         for (String line : lines) {
@@ -210,7 +221,8 @@ public class RhythmGenerator {
     }
     
     
-    
+    // a function used for splitting the String array by bars, based on the '|' character
+    // it returns a matrix where each row is a sequence of note lengths of one bar
     public static String[][] splitByBar(String[] noteLengths) throws Exception {
     	
     	if (noteLengths == null || noteLengths.length == 0) {
@@ -250,6 +262,9 @@ public class RhythmGenerator {
         return result;
     }
     
+    
+    
+    // a function which detects the known patterns in the matrix which we get from the splitByBar method
     public static int[] patternReader(Integer[][] bars, Map<Integer, Integer[]> patterns) {
     	ArrayList<Integer> patternkeys = new ArrayList<>();
 
@@ -270,6 +285,7 @@ public class RhythmGenerator {
     }
    
     
+    // a function for getting the appropriate pattern HashMap based on the time signature
     public Map<Integer, Integer[]> getPatternDictionary(String timeSignature) throws Exception{
     	
     	Map<Integer, Integer[]> dictionary;
