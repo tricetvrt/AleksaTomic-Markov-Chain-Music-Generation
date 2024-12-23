@@ -95,6 +95,7 @@ Note: You do not have to use spaces in between, and are allowed to write multipl
 
 ## Training dataset:
  - The training dataset is the given text file [abc_data.txt](https://github.com/tricetvrt/AleksaTomic-Markov-Chain-Music-Generation/blob/main/ailab/abc_data.txt)
+ - I have gathered a number of folk songs coming from the Balkans, Middle East, and other parts of the world with similar sounding folk music.
  - You are allowed, and incouraged to gather your own data, and choose your own genre you would like to explore generation with.
  - Ensure the training data (`abc_data.txt`) is in place and that the ABC notation melodies are separated  by `$$$`, which is used for handling the dataset in the program.
 
